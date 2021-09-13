@@ -14,7 +14,7 @@ function computerPlay() {
 }
 
 function playRound(playerSelection, computerSelection) {
-    playerSelection = playerSelection.toLowerCase();
+    //console.log(playerSelection + " comp:" + computerSelection);
     let result;
     switch(playerSelection){
         case "rock":
@@ -54,58 +54,48 @@ function playRound(playerSelection, computerSelection) {
             }
             //chose scissors
     }
-    console.log(`You ${result}. Computer chose ${computerSelection} but you chose ${playerSelection}.`);
+    h1.textContent = (`You ${result}. Computer chose ${computerSelection} but you chose ${playerSelection}.`);
     
     if (result == "won") {
-        return 1;
+        playerScore++;
     }
-    else if (result == "tied") {
-        return 0;
+    else if (result == "lost") {
+        compScore++;
     }
-    else {
-        return -1;
+    player.textContent = "Player: " + playerScore;
+    computer.textContent = "Computer: " + compScore;
+    if (compScore == 5 || playerScore == 5) {
+        //console.log("sdflkjsdflksd");
+        buttons.forEach( (button) => {
+            button.removeEventListener("click", play);
+        })
     }
+    if ( compScore == 5) {
+        h1.textContent =`You lost! Computer scored ${compScore} but you scored ${playerScore}!`;
+    }
+    else if (playerScore == 5) {
+        h1.textContent = `You won! Computer scored ${compScore} but you scored ${playerScore}!`;
+    }
+
+
+
     
 }
 
-function game() {
-    let playerScore = 0;
-    let compScore = 0;
-    let playerSelection;
-    for (let i = 0; i < 5; i++) {
-        playerSelection = window.prompt("What is your choice?").toLowerCase();
-        while (playerSelection != "rock" && playerSelection !="paper" && playerSelection !="scissors") {
-            playerSelection = window.prompt("Please repeat your selection.").toLowerCase();
-        }
-        let resultInt = playRound(playerSelection, computerPlay());
-        
-        if (resultInt == 1) {
-            playerScore++;
-        }
-        else if ( resultInt == 0) {
-            playerScore++;
-            compScore++;
-        }
-        else {
-            compScore++;
-        }
-    }
-
-    if ( compScore > playerScore) {
-        console.log( `You lost! Computer scored ${compScore} but you scored ${playerScore}!`);
-    }
-    else if ( compScore < playerScore) {
-        console.log( `You won! Computer scored ${compScore} but you scored ${playerScore}!`);
-    }
-    else{
-        console.log("You tied! Both of you scored the same.");
-    }
+function play(e) {
+    //console.log(button.getAttribute("class"));
+    playRound(e.target.getAttribute("class"), computerPlay());
 }
 
-function debug() {
-    let net = 0;
-    for (let i = 0; i <100; i++) {
-        net = net + playRound("rock", computerPlay());
-    }
-    console.log(net);
-}
+let playerScore = 0;
+let compScore = 0;
+let buttons = document.querySelectorAll("button");
+let player = document.querySelector(".player");
+let computer = document.querySelector(".computer");
+let h1 = document.querySelector("h1");
+
+console.log(buttons);
+buttons.forEach( (button) => {
+    button.addEventListener("click", play);
+})
+
